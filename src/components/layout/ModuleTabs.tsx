@@ -12,6 +12,7 @@ import { cn } from "@/lib/utils";
 
 interface ModuleTabsProps {
   baseUrl: string;
+  datasettId?: string;
 }
 
 const modules = [
@@ -24,7 +25,15 @@ const modules = [
   { id: "sql", label: "SQL", icon: Database },
 ];
 
-export function ModuleTabs({ baseUrl }: ModuleTabsProps) {
+export function ModuleTabs({ baseUrl, datasettId }: ModuleTabsProps) {
+  const getModuleUrl = (moduleId: string) => {
+    // For modules that need datasettId in the path
+    if (datasettId && ["analyse", "sporring", "eksport", "mmc", "sql"].includes(moduleId)) {
+      return `${baseUrl}/${datasettId}/${moduleId}`;
+    }
+    return `${baseUrl}/${moduleId}`;
+  };
+
   return (
     <nav className="sticky top-16 z-40 w-full border-b border-border bg-card">
       <div className="flex items-center gap-1 px-6 py-2 overflow-x-auto">
@@ -33,7 +42,7 @@ export function ModuleTabs({ baseUrl }: ModuleTabsProps) {
           return (
             <NavLink
               key={module.id}
-              to={`${baseUrl}/${module.id}`}
+              to={getModuleUrl(module.id)}
               className={({ isActive }) =>
                 cn(
                   "flex items-center gap-2 px-4 py-2 rounded-md text-sm font-medium transition-all duration-200",
